@@ -1,0 +1,77 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 50%, #ffe8f8 100%);
+  min-height: 100vh;
+}
+
+.card-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #fef7ff 100%);
+  box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+}
+
+.btn-pink {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+}
+
+.activity-card {
+  background: linear-gradient(135deg, #fff0f5 0%, #fef7ff 100%);
+  border: 2px solid #ffb6c1;
+  transition: all 0.3s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(255, 182, 193, 0.4);
+}
+
+.progress-bar-container {
+  background: #e0e0e0;
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden; /* Ensure the gradient doesn't bleed outside */
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #ff6b9d 0%, #ff8fab 100%);
+  border-radius: 10px;
+  height: 8px;
+  width: 0%; /* Initial width, controlled by JS */
+  transition: width 0.5s ease-in-out;
+}
+
+.modal {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.checkbox-custom {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff6b9d;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent checkbox from shrinking */
+}
+
+.checkbox-custom:checked {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+  border-color: #ff6b9d; /* Match checked background */
+}
+
+.checkbox-custom:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 3px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}

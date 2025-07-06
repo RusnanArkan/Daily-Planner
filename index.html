@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Target Asha</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 50%, #ffe8f8 100%);
+        min-height: 100vh;
+      }
+      .card-gradient {
+        background: linear-gradient(135deg, #ffffff 0%, #fef7ff 100%);
+        box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+      }
+      .btn-pink {
+        background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+        transition: all 0.3s ease;
+      }
+      .btn-pink:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+      }
+      .activity-card {
+        background: linear-gradient(135deg, #fff0f5 0%, #fef7ff 100%);
+        border: 2px solid #ffb6c1;
+        transition: all 0.3s ease;
+      }
+      .activity-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+      }
+      .progress-bar-container {
+        background-color: #fce7f3; /* Light pink background */
+        border-radius: 9999px; /* Fully rounded */
+        overflow: hidden;
+        height: 1rem; /* Adjust height as needed */
+      }
+      .progress-bar {
+        height: 100%;
+        border-radius: 9999px; /* Fully rounded */
+        transition: width 0.5s ease-in-out;
+      }
+      /* Custom modal styles if needed, or rely on Tailwind's defaults */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+      }
+      .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+      }
+      .close-button:hover,
+      .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="p-6">
+    <div class="max-w-4xl mx-auto bg-white card-gradient rounded-3xl shadow-xl p-8 lg:p-12">
+      <h1 class="text-4xl font-extrabold text-pink-700 text-center mb-6">🌸Jadwal Kegiatan Harianku🌸</h1>
+      <h4 class="text-xl font-extrabold text-pink-700 text-center mb-6">Atur jadwal dan capai target harianmu dengan menyenangkan!</h4>
+      <div class="flex items-center justify-between mb-8">
+        <button id="prevDay" class="btn-pink text-white px-4 py-2 rounded-full shadow-md focus:outline-none">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="flex flex-col items-center">
+          <span id="dateLabel" class="text-xl lg:text-2xl font-semibold text-gray-800"></span>
+          <input type="date" id="currentDate" class="mt-2 text-center text-gray-700 bg-transparent border-none focus:outline-none cursor-pointer" />
+        </div>
+        <button id="nextDay" class="btn-pink text-white px-4 py-2 rounded-full shadow-md focus:outline-none">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="text-center mb-6">
+        <button id="goToToday" class="btn-pink text-white px-6 py-2 rounded-full shadow-md focus:outline-none">Hari Ini</button>
+      </div>
+
+      <div class="mb-6">
+        <label for="currentTime" class="block text-gray-700 text-sm font-bold mb-2">Waktu Saat Ini:</label>
+        <input type="time" id="currentTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+
+      <div class="bg-gray-50 rounded-2xl p-6 mb-8 shadow-inner border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Ringkasan Pencapaian</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-gradient-to-r from-pink-100 to-red-100 p-4 rounded-xl shadow-sm border border-pink-200">
+            <h3 class="text-lg font-semibold text-pink-700 mb-2">Harian</h3>
+            <div class="flex items-center space-x-2">
+              <div class="progress-bar-container flex-grow">
+                <div id="dailyProgressBar" class="progress-bar bg-pink-500" style="width: 0%"></div>
+              </div>
+              <span id="dailyProgress" class="text-pink-700 font-semibold">0%</span>
+            </div>
+          </div>
+          <div class="bg-gradient-to-r from-purple-100 to-indigo-100 p-4 rounded-xl shadow-sm border border-purple-200">
+            <h3 class="text-lg font-semibold text-purple-700 mb-2">Mingguan</h3>
+            <div class="flex items-center space-x-2">
+              <div class="progress-bar-container flex-grow">
+                <div id="weeklyProgressBar" class="progress-bar bg-purple-500" style="width: 0%"></div>
+              </div>
+              <span id="weeklyProgress" class="text-purple-700 font-semibold">0%</span>
+            </div>
+          </div>
+          <div class="bg-gradient-to-r from-blue-100 to-green-100 p-4 rounded-xl shadow-sm border border-blue-200">
+            <h3 class="text-lg font-semibold text-blue-700 mb-2">Bulanan</h3>
+            <div class="flex items-center space-x-2">
+              <div class="progress-bar-container flex-grow">
+                <div id="monthlyProgressBar" class="progress-bar bg-blue-500" style="width: 0%"></div>
+              </div>
+              <span id="monthlyProgress" class="text-blue-700 font-semibold">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="activity-card p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+          <div class="text-6xl text-pink-500 mb-4">📖</div>
+          <h3 class="text-2xl font-bold text-pink-700 mb-3">Hapalan Surat Pendek</h3>
+          <div class="w-full">
+            <div class="progress-bar-container mb-2">
+              <div id="quranProgressBar" class="progress-bar bg-pink-500" style="width: 0%"></div>
+            </div>
+            <p id="quranProgressText" class="text-sm text-gray-600 mb-4">0/0</p>
+          </div>
+          <button onclick="openModal('quranModal')" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl">Atur Kegiatan</button>
+        </div>
+
+        <div class="activity-card p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+          <div class="text-6xl text-blue-500 mb-4">📚</div>
+          <h3 class="text-2xl font-bold text-blue-700 mb-3">Belajar</h3>
+          <div class="w-full">
+            <div class="progress-bar-container mb-2">
+              <div id="studyProgressBar" class="progress-bar bg-blue-500" style="width: 0%"></div>
+            </div>
+            <p id="studyProgressText" class="text-sm text-gray-600 mb-4">0/0</p>
+          </div>
+          <button onclick="openModal('studyModal')" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl">Atur Kegiatan</button>
+        </div>
+
+        <div class="activity-card p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+          <div class="text-6xl text-purple-500 mb-4">💪</div>
+          <h3 class="text-2xl font-bold text-purple-700 mb-3">Olahraga</h3>
+          <div class="w-full">
+            <div class="progress-bar-container mb-2">
+              <div id="sportsProgressBar" class="progress-bar bg-purple-500" style="width: 0%"></div>
+            </div>
+            <p id="sportsProgressText" class="text-sm text-gray-600 mb-4">0/0</p>
+          </div>
+          <button onclick="openModal('sportsModal')" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl">Atur Kegiatan</button>
+        </div>
+
+        <div class="activity-card p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+          <div class="text-6xl text-yellow-500 mb-4">🎉</div>
+          <h3 class="text-2xl font-bold text-yellow-700 mb-3">Having Fun</h3>
+          <div class="w-full">
+            <div class="progress-bar-container mb-2">
+              <div id="funProgressBar" class="progress-bar bg-yellow-500" style="width: 0%"></div>
+            </div>
+            <p id="funProgressText" class="text-sm text-gray-600 mb-4">0/0</p>
+          </div>
+          <button onclick="openModal('funModal')" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl">Atur Kegiatan</button>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center mt-8">Galeri Foto Kegiatanku</h2>
+      <div id="photoGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-8">
+        <div class="bg-pink-100 rounded-2xl p-8 text-center border-2 border-dashed border-pink-300">
+          <div class="text-4xl text-pink-400 mb-2">📷</div>
+          <p class="text-pink-500 text-sm">Upload foto kegiatanmu!</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <button id="exportExcel" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl"><i class="fas fa-file-excel mr-2"></i> Ekspor ke Excel</button>
+        <button id="resetData" class="btn-pink text-white px-8 py-3 rounded-full shadow-lg focus:outline-none hover:shadow-xl"><i class="fas fa-undo mr-2"></i> Reset Data</button>
+      </div>
+    </div>
+
+    <div id="quranModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal('quranModal')">&times;</span>
+        <h2 class="text-2xl font-bold mb-4 text-pink-700">Hapalan Surat Pendek</h2>
+        <div class="mb-4">
+          <label for="quranDailyTarget" class="block text-gray-700 text-sm font-bold mb-2">Target Harian (Jumlah Surat):</label>
+          <input type="number" id="quranDailyTarget" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">Surat yang Dihapal:</label>
+          <div id="quranList" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-3 rounded"></div>
+        </div>
+        <div class="mb-4">
+          <label for="quranNotes" class="block text-gray-700 text-sm font-bold mb-2">Catatan:</label>
+          <textarea id="quranNotes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="quranPhoto" class="block text-gray-700 text-sm font-bold mb-2">Upload Foto:</label>
+          <input type="file" id="quranPhoto" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <button id="saveQuran" class="btn-pink text-white px-6 py-2 rounded-full shadow-md focus:outline-none hover:shadow-xl w-full">Simpan</button>
+      </div>
+    </div>
+
+    <div id="studyModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal('studyModal')">&times;</span>
+        <h2 class="text-2xl font-bold mb-4 text-blue-700">Belajar</h2>
+        <div class="mb-4">
+          <label for="studyDailyTarget" class="block text-gray-700 text-sm font-bold mb-2">Target Harian (Jumlah Mata Pelajaran):</label>
+          <input type="number" id="studyDailyTarget" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">Mata Pelajaran:</label>
+          <div id="studyList" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-3 rounded"></div>
+        </div>
+        <div class="mb-4">
+          <label for="studyNotes" class="block text-gray-700 text-sm font-bold mb-2">Catatan:</label>
+          <textarea id="studyNotes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="studyPhoto" class="block text-gray-700 text-sm font-bold mb-2">Upload Foto:</label>
+          <input type="file" id="studyPhoto" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <button id="saveStudy" class="btn-pink text-white px-6 py-2 rounded-full shadow-md focus:outline-none hover:shadow-xl w-full">Simpan</button>
+      </div>
+    </div>
+
+    <div id="sportsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal('sportsModal')">&times;</span>
+        <h2 class="text-2xl font-bold mb-4 text-purple-700">Olahraga</h2>
+        <div class="mb-4">
+          <label for="sportsDailyTarget" class="block text-gray-700 text-sm font-bold mb-2">Target Harian (Jumlah Kegiatan):</label>
+          <input type="number" id="sportsDailyTarget" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div class="mb-4">
+          <label for="newSportsActivity" class="block text-gray-700 text-sm font-bold mb-2">Tambahkan Kegiatan Olahraga:</label>
+          <div class="flex">
+            <input type="text" id="newSportsActivity" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <button id="addSportsActivityBtn" class="btn-pink text-white px-4 py-2 rounded-r shadow-md focus:outline-none hover:shadow-xl">Tambah</button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">Daftar Kegiatan:</label>
+          <div id="sportsList" class="max-h-60 overflow-y-auto border p-3 rounded"></div>
+        </div>
+        <div class="mb-4">
+          <label for="sportsNotes" class="block text-gray-700 text-sm font-bold mb-2">Catatan:</label>
+          <textarea id="sportsNotes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="sportsPhoto" class="block text-gray-700 text-sm font-bold mb-2">Upload Foto:</label>
+          <input type="file" id="sportsPhoto" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <button id="saveSports" class="btn-pink text-white px-6 py-2 rounded-full shadow-md focus:outline-none hover:shadow-xl w-full">Simpan</button>
+      </div>
+    </div>
+
+    <div id="funModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal('funModal')">&times;</span>
+        <h2 class="text-2xl font-bold mb-4 text-yellow-700">Having Fun</h2>
+        <div class="mb-4">
+          <label for="funDailyTarget" class="block text-gray-700 text-sm font-bold mb-2">Target Harian (Jumlah Kegiatan):</label>
+          <input type="number" id="funDailyTarget" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <div class="mb-4">
+          <label for="newFunActivity" class="block text-gray-700 text-sm font-bold mb-2">Tambahkan Kegiatan Fun:</label>
+          <div class="flex">
+            <input type="text" id="newFunActivity" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <button id="addFunActivityBtn" class="btn-pink text-white px-4 py-2 rounded-r shadow-md focus:outline-none hover:shadow-xl">Tambah</button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">Daftar Kegiatan:</label>
+          <div id="funList" class="max-h-60 overflow-y-auto border p-3 rounded"></div>
+        </div>
+        <div class="mb-4">
+          <label for="funNotes" class="block text-gray-700 text-sm font-bold mb-2">Catatan:</label>
+          <textarea id="funNotes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="funPhoto" class="block text-gray-700 text-sm font-bold mb-2">Upload Foto:</label>
+          <input type="file" id="funPhoto" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        </div>
+        <button id="saveFun" class="btn-pink text-white px-6 py-2 rounded-full shadow-md focus:outline-none hover:shadow-xl w-full">Simpan</button>
+      </div>
+    </div>
+
+    <script>
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+      }
+
+      // Close modal if clicked outside
+      window.onclick = function (event) {
+        if (event.target.classList.contains('modal')) {
+          event.target.style.display = 'none';
+        }
+      };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
